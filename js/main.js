@@ -46,7 +46,7 @@ function cargarMarcas() {
       });
   }
   
-  // Función para buscar productos basados en la marca seleccionada
+// Función para buscar productos basados en la marca seleccionada
 function buscarProductos() {
   console.log('Esperando...');
   let h = `<h2>Esperando... </h2>`;
