@@ -82,6 +82,7 @@ function buscarProductos() {
           if (item.inventory.data.total <= 25) {
 
             console.log('< 25');
+            
             return false; // No pasa el filtro si el inventario es menor o igual a 25
 
           } else {
