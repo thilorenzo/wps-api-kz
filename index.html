@@ -15,12 +15,13 @@
     <div class="container">
       <div class="left-section general-container" id="searchCol">
         <section>
-          <form action="" >
+          <form action="" style="margin-bottom: 10px;">
             <input
             type="text"
             id="search"
             name="search"
             placeholder="Buscar marca"
+            onkeyup="filterFunction()"
             />
           </form>
           <select class="unselected-brand form-select" multiple id="marcaSelect"></select>
@@ -37,7 +38,7 @@
     </div>
       <!-- Caja con header y pestañas -->
       <div class="box general-container" id="productBox">
-        <div class="header productTab">
+        <div class="productTab">
           <button class="tab active">Todos</button>
           <button class="tab">Productos sin guardar</button>
           <button class="tab">Productos guardados</button>

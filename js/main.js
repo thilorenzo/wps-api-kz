@@ -12,7 +12,7 @@ let profit = 0;
 let profitPercentage = 0;
 let inventoryTotal = 0;
 let cursorNow = 0;
-
+let marcas = []
 
 
 function cargarMarcas() {
@@ -32,7 +32,7 @@ function cargarMarcas() {
         return response.json();
       })
       .then(data => {
-        const marcas = data.data;
+        marcas = data.data;
         const selectElement = document.getElementById('marcaSelect');
   
         // Llenar el select con las opciones de marca
@@ -234,13 +234,26 @@ function buscarProductos() {
       });
 }
 
-
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("search");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("marcaSelect");
+  a = div.getElementsByTagName("option");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
 
 // Asociar la función buscarProductos al botón
 document.getElementById('marcaSelect').addEventListener('change', buscarProductos);
 
 // Cargar las marcas al cargar la página
 cargarMarcas();
-  
 
 
