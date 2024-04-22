@@ -21,6 +21,14 @@ body{
    
 }
 
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
 #productBox{
   max-height: 45.7em;
   height: 45.7em;
@@ -498,7 +506,7 @@ font-size: 30px;
     width: 200px;
     float: left;
     margin: 15px;
-    
+    min-height: 8em;
 }
 
 /* width */

@@ -12,7 +12,13 @@ let profit = 0;
 let profitPercentage = 0;
 let inventoryTotal = 0;
 let cursorNow = 0;
-let marcas = []
+
+const btnSiguienteMarca = document.getElementById('back');
+const btnAnteriorMarca = document.getElementById('next');
+
+let marcas = []; // Array para almacenar las marcas obtenidas del <select>
+let marcaActualIndex = -1; // Índice de la marca actual seleccionada (-1 indica ninguna seleccionada inicialmente)
+
 
 
 function cargarMarcas() {
@@ -34,6 +40,8 @@ function cargarMarcas() {
       .then(data => {
         marcas = data.data;
         const selectElement = document.getElementById('marcaSelect');
+
+        marcaSelect.innerHTML = '';
   
         // Llenar el select con las opciones de marca
         marcas.forEach(marca => {
@@ -42,6 +50,10 @@ function cargarMarcas() {
           option.textContent = marca.name;
           selectElement.appendChild(option);
         });
+
+        if (marcaActualIndex !== -1 && marcaActualIndex < marcas.length) {
+          marcaSelect.selectedIndex = marcaActualIndex;
+        }
       })
       .catch(error => {
         console.error('Ocurrió un error al cargar las marcas:', error);
@@ -52,17 +64,25 @@ function cargarMarcas() {
 function buscarProductos() {
   console.log('Esperando...');
   let h = `<h2>Esperando... </h2>`;
-
+  
   const itemsTotalHtml = document.getElementById('itemsTotal');
   itemsTotalHtml.innerHTML = h;
   const selectedBrandId = document.getElementById('marcaSelect').value;
-  let apiUrl = `https://api.wps-inc.com/items?include=inventory,brand&fields[items]=name,sku,list_price,standard_dealer_price&fields[inventory]=total&fields[brand]=name&filter[brand_id][eq]=${selectedBrandId}&page[size]=5000&page[cursor]=${cursor}`;
+
+  let nombreMarca = obtenerNombreMarcaPorId(selectedBrandId)
+  actualizarMarcaName(nombreMarca);
+
+  // obtenerNombreMarcaPorId(selectedBrandId);
+  // actualizarMarcaName(nombreMarca);
+
+  let apiUrl = `https://api.wps-inc.com/items?include=inventory,brand,images&fields[items]=name,sku,list_price,standard_dealer_price&fields[inventory]=total&fields[brand]=name&fields[images]=domain,path,filename&filter[brand_id][eq]=${selectedBrandId}&page[size]=5000&page[cursor]=${cursor}`;
 
   const requestOptions = {
       headers: {
       'Authorization': `Bearer ${apiKey}`
       }
   };
+
 
   fetch(apiUrl, requestOptions)
       .then(response => {
@@ -86,7 +106,6 @@ function buscarProductos() {
             return false; // No pasa el filtro si el inventario es menor o igual a 25
 
           } else {
-
               profit = (item.list_price - (item.list_price * 0.13))  - item.standard_dealer_price - logisticsCost;
               profitPercentage = (profit / item.list_price) * 100;
           }
@@ -121,32 +140,64 @@ function buscarProductos() {
         const itemsTotalHtml = document.getElementById('itemsTotal');
         itemsTotalHtml.innerHTML = h;
 
+
         filteredResults.forEach(item => {
-          ol += `
-          <button class="card" id="card-inactive">
-            <img src="img/product-image.png" alt="" id="product-image" />
-            <div id="pages-container">
-              <img src="img/amazon.png" alt="" id="pages" />
-              <img src="img/ebay.png" alt="" id="pages" />
-            </div>
-            <p>SKU: ${item.sku}</p>
-            <h3>${item.name}</h3>
-            <p id="important-info">
-              Brand: ${item.brand.data.name}
-              Stock: ${item.inventory.data.total} <br />
-              Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
-              Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
-            </p>
-            <div class="prices">
-              <p id="price-text">List Price</p>
-              <h3 id="price-number">$${item.list_price}</h3>
-            </div>
-            <div class="prices">
-              <p id="price-text">Standard Price</p>
-              <h3 id="price-number">$${item.standard_dealer_price}</h3>
-            </div>
-          </button>
+
+          imageLink = item.images.data[0].filename
+
+          if (item.name.toLowerCase().includes('helmet')) {
+            ol += `
+            <button class="card" id="card-inactive">
+              <img src="https://cdn.wpsstatic.com/images/full/${imageLink}" alt="" id="product-image" />
+              <div id="pages-container">
+                <img src="img/ebay.png" alt="" id="pages" />
+              </div>
+              <p>SKU: ${item.sku}</p>
+              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
+              <p id="important-info">
+                Brand: ${item.brand.data.name}
+                Stock: ${item.inventory.data.total} <br />
+                Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
+                Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
+              </p>
+              <div class="prices">
+                <p id="price-text">List Price</p>
+                <h3 id="price-number">$${item.list_price}</h3>
+              </div>
+              <div class="prices">
+                <p id="price-text">Standard Price</p>
+                <h3 id="price-number">$${item.standard_dealer_price}</h3>
+              </div>
+            </button>
           `;
+          } else {
+            ol += `
+            <button class="card" id="card-inactive">
+              <img src="https://cdn.wpsstatic.com/images/full/${imageLink}" alt="" id="product-image" />
+              <div id="pages-container">
+                <img src="img/amazon.png" alt="" id="pages" />
+                <img src="img/ebay.png" alt="" id="pages" />
+              </div>
+              <p>SKU: ${item.sku}</p>
+              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
+              <p id="important-info">
+                Brand: ${item.brand.data.name}
+                Stock: ${item.inventory.data.total} <br />
+                Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
+                Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
+              </p>
+              <div class="prices">
+                <p id="price-text">List Price</p>
+                <h3 id="price-number">$${item.list_price}</h3>
+              </div>
+              <div class="prices">
+                <p id="price-text">Standard Price</p>
+                <h3 id="price-number">$${item.standard_dealer_price}</h3>
+              </div>
+            </button>
+            `;
+          }
+          
         })
 
       
@@ -168,66 +219,6 @@ function buscarProductos() {
         console.log('Esperando siguiente pagina');
       
       }
-
-
-
-
-
-      // if (cursor !== null) {
-
-      //   itemsParcial = filteredResults.length + itemsParcial
-      //   buscarProductos();
-      //   console.log('Parcial total de items: ', itemsParcial);
-      //   console.log('Esperando siguiente pagina');
-        
-      // } else {
-        
-      //   itemsTotal = filteredResults.length + itemsParcial
-
-      //   h += `Total de items: ${itemsTotal} </h2>`;
-
-      //   const itemsTotalHtml = document.getElementById('itemsTotal');
-      //   itemsTotalHtml.innerHTML = h;
-
-      //   filteredResults.forEach(item => {
-      //     ol += `
-      //     <li style="font-size: 22px;">
-      //       ${item.name}
-
-      //       <ul>
-      //         <li>SKU: ${item.sku}</li>
-
-      //         <li>Marca: ${item.brand.data.name}</li>
-
-      //         <li>Precio de lista: ${item.list_price}</li>
-
-      //         <li>Precio de Dealer: ${item.standard_dealer_price}</li>
-
-      //         <li>Profit $: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)}</li>
-
-      //         <li>Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}</li>
-
-      //         <li>Stock: ${item.inventory.data.total}</li>
-      //       </ul>
-      //     </li>
-      //     `;
-      //   })
-
-      //   ol += '</ol>';
-      
-
-      //   const container = document.getElementById('container');
-      //   container.innerHTML = ol;
-
-      //   cursor = 1;
-      //   console.log('Listo!');
-
-      //   // Reinicio contador
-      //   itemsTotal = 0;
-      //   itemsParcial = 0;
-      // }
-
-
       })
       .catch(error => {
       console.error('Ocurrió un error al buscar productos:', error);
@@ -251,7 +242,62 @@ function filterFunction() {
 }
 
 // Asociar la función buscarProductos al botón
-document.getElementById('marcaSelect').addEventListener('change', buscarProductos);
+document.getElementById('marcaSelect').addEventListener('change', () => {
+
+  buscarProductos()
+
+  const selectedId = marcaSelect.value; // Obtener el id seleccionado como número entero
+
+  // Encontrar el índice de la marca seleccionada en el array 'marcas'
+  const selectedMarcaIndex = marcas.findIndex(marca => marca.id == selectedId);
+
+  // Actualizar 'marcaActualIndex' si se encontró la marca seleccionada
+  if (selectedMarcaIndex !== -1) {
+      marcaActualIndex = selectedMarcaIndex;
+  }
+
+
+});
+
+function actualizarMarcaName(texto) {
+  const marcaNameElement = document.getElementById('marcaName');
+  if (marcaNameElement) {
+      marcaNameElement.textContent = texto;
+  } else {
+      console.error('No se encontró el elemento con el ID "marcaName".');
+  }
+}
+
+function obtenerNombreMarcaPorId(id) {
+  // Buscar la marca en el array usando el método find()
+  const marcaEncontrada = marcas.find(marca => marca.id == id);
+
+  // Verificar si se encontró la marca
+  if (marcaEncontrada) {
+      return marcaEncontrada.name; // Devolver el nombre de la marca si se encontró
+  } else {
+      return null; // Devolver null si la marca no se encontró (o puedes manejar este caso según tu lógica)
+  }
+}
+
+
+next.addEventListener('click', () => {
+  if (marcaActualIndex < marcas.length - 1) {
+      marcaActualIndex++;
+      marcaSelect.selectedIndex = marcaActualIndex;
+      buscarProductos();
+  }
+});
+
+back.addEventListener('click', () => {
+  if (marcaActualIndex < marcas.length - 1) {
+      marcaActualIndex--;
+      marcaSelect.selectedIndex = marcaActualIndex;
+      buscarProductos();
+  }
+});
+
+
 
 // Cargar las marcas al cargar la página
 cargarMarcas();
