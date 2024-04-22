@@ -2,20 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <style>
-      body {
-        margin: 100px;
-      }
-    </style>
-  </head>
+      <link rel="stylesheet" href="css/grid.css">
+      <link rel="stylesheet" href="css/style.css">
+    </head>
 
   <body>
-    <h1>Selecciona una marca:</h1>
-    <select id="marcaSelect"></select>
-    <button id="buscarProductosBtn">Buscar Productos</button>
-    
-    <div id = "itemsTotal"></div>
-    <div id = "container"></div>
+
+    <header class="px-3 py-2 mb-3 header">
+        <img src="img/logo.png" alt="logo" id="logo">
+    </header>
+
+    <div class="container">
+      <div class="left-section general-container" id="searchCol">
+        <section>
+          <form action="" >
+            <input
+            type="text"
+            id="search"
+            name="search"
+            placeholder="Buscar marca"
+            />
+          </form>
+          <select class="unselected-brand form-select" multiple id="marcaSelect"></select>
+        </section>
+      </div>
+    <div class="right-section ">
+      <div class="search-bar container-title general-container" 
+      style="margin-bottom: 20px;
+      padding: 0px 15px 0px 15px;
+      max-width: 97.8%;">
+          <button id="back"></button>
+          <h2>100-PERCENT</h2>
+          <button id="next"></button>
+    </div>
+      <!-- Caja con header y pestañas -->
+      <div class="box general-container" id="productBox">
+        <div class="header productTab">
+          <button class="tab active">Todos</button>
+          <button class="tab">Productos sin guardar</button>
+          <button class="tab">Productos guardados</button>
+        </div>
+        <div class="content" style="
+        padding-left: 15px;
+        padding-right: 15px;
+        max-height: 40em;
+        overflow-y: auto;">
+          <!-- Contenido de la pestaña activa -->
+          <div id = "itemsTotal"></div>
+          <div id="container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="container">
+
+        <div class="col general-container" id="searchCol">
+          <section>
+            <form action="" >
+              <input
+                type="text"
+                id="search"
+                name="search"
+                placeholder="Buscar marca"
+              />
+            </form>
+            <select class="unselected-brand form-select" multiple id="marcaSelect"></select>
+            <button id="buscarProductosBtn">Buscar Productos</button>
+          </section>
+        </div>
+        <div class="col" id="container">
+          <div id = "itemsTotal"></div>
+        </div>
+
+    </div> -->
 
     <script src="js/main.js"></script>
     

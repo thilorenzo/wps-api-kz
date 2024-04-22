@@ -1,16 +1,13 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 2fr; /* Columnas: la izquierda ocupa 1 parte, la derecha 2 partes */
-  gap: 20px; /* Espacio entre las secciones */
+  gap: 5px; /* Espacio entre las secciones */
 }
 
 .left-section {
   padding: 20px;
 }
 
-.right-section {
-  padding: 20px;
-}
 
 .box {
   border-radius: 8px;
@@ -30,12 +27,15 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
-  font-weight: bold;
+  font-family: var(--main-font);
+  color: var(--type-color);
   transition: background-color 0.3s ease;
 }
 
 .tab.active {
-  background-color: #f0f0f0;
+  border-bottom: 3px;
+  border-bottom-style: solid;
+  border-bottom-color: var(--accent-color);
 }
 
 

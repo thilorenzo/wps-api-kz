@@ -1,0 +1,594 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+:root{
+    --main-font: "Plus Jakarta Sans", sans-serif;
+    --main-bg-color: #757575;
+    --main-bg-container: #121212;
+    --opened-filter-color: #3a3a3a;
+    --section-container-card: #1c1c1c;
+    --card-color: #454545;
+    --accent-color: #DB2C2C;
+    --type-color: #EDEDED;
+    --inputfield-bg-color: #EDEDED;
+    --light-type-color: #D3D3D3;
+    
+}
+
+body{
+    background-color: var(--main-bg-color);
+    font-family: var(--main-font);
+    margin: 0 0 0 0;
+   
+}
+
+#productBox{
+  max-height: 45.7em;
+  height: 45.7em;
+}
+
+#searchCol {
+  max-width: 500px;
+}
+
+.header {
+  width: 100%;
+  margin-bottom: 2rem;
+
+}
+
+.productTab{
+  border-bottom: var(--opened-filter-color);
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+}
+
+.container{
+  margin: 0 50px 0 50px;
+  max-width: 1800px;
+  max-height: 20px;
+}
+
+.general-container{
+    background-color: var(--section-container-card);
+    width: calc(100% - 5px);
+    padding: 5px;
+    border-radius: 14px;
+}
+
+#buscarProductosBtn{
+  background-color: var(--accent-color);
+  color: var(--main-bg-container);
+  position: absolute;
+  top: 86%; /* Centra verticalmente en relación con el borde superior del contenedor */
+  left: 16%; /* Centra horizontalmente en relación con el borde izquierdo del contenedor */
+  transform: translate(-50%, -50%); /* Corrige el centrado para que el punto central del botón esté en el centro del contenedor */
+  padding: 12px 40px 12px 40px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 12.76px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+header {
+    background: linear-gradient(90deg, rgba(18,18,18,1) 0%, rgba(28,28,28,1) 39%, rgba(69,69,69,1) 100%);
+    font-family: var(--main-font);
+    height: 15%;
+    width: 100%;
+   
+}
+
+#logo {
+  margin-left: 40%;
+  height: 20%;
+  width: 18%;
+  margin-top: 0.5%;
+  margin-bottom: 0.5%;
+}
+
+#search {
+    font-family: var(--main-font);
+    width: calc(100%);
+    
+    background-image: url('../img/searchicon.png');
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-color: var(--inputfield-bg-color);
+    background-size: 21px;
+    padding: 12px 40px 12px 20px;
+    margin: 8px 0;
+    border-radius: 12.76px;
+    border: 1px solid var(--inputfield-bg-color);
+    caret-color: var(--accent-color);
+    color: black;
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+ #search:focus {
+    border: 1px solid var(--accent-color);
+  }
+
+  ::placeholder {
+    color: #8C8C8C;
+    opacity: 1;
+  }
+
+  #selected-brand{
+    height: 45px;
+    padding: 0 17px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    color: var(--type-color);
+    font-family: var(--main-font);
+    font-size: medium;
+    background-color: var(--accent-color);
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 14px;
+  }
+
+  .unselected-brand{
+    height: 45em;
+    width: 100%;
+    padding: 0px 17px;
+    text-align: left;
+    border: none;
+    color: var(--type-color);
+    font-family: var(--main-font);
+    font-size: medium;
+    background-color: transparent;
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 14px;
+  }
+
+  select > option:hover{
+    background-color: var(--accent-color);
+    border-radius: 14px;  
+  }
+
+  select > option:checked{
+    background-color: var(--accent-color);
+    border-radius: 14px;  
+    color: var(--type-color);
+  }
+
+  select > option{
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  #filterbutton{
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: #404040;
+    background-image: url('../img/filter.png');
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 12.76px;
+}
+
+#filterbutton:focus{
+    background-color: var(--accent-color);
+}
+
+.filter{
+    border-radius: 12.47px;
+    margin: 20px 0;
+    background-color: var(--opened-filter-color);
+    padding: 1vw;
+}
+/* The container */
+.radiobutton {
+    
+    color: var(--type-color);
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default radio button */
+  .radiobutton input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    
+  }
+  
+  /* Create a custom radio button */
+  .checkmarkrb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #464646;
+    border: 1px solid var(--inputfield-bg-color);
+    border-color: #BEBEBE;
+    border-radius: 50%;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .radiobutton:hover input ~ .checkmarkrb {
+    background-color: #acacac;
+  }
+  
+  /* When the radio button is checked, add a blue background */
+  .radiobutton input:checked ~ .checkmarkrb {
+    background-color: #464646;
+    
+  }
+
+  /* Create the indicator (the dot/circle - hidden when not checked) */
+  .checkmarkrb:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the indicator (dot/circle) when checked */
+  .radiobutton input:checked ~ .checkmarkrb:after {
+    display: block;
+  }
+  
+  /* Style the indicator (dot/circle) */
+  .radiobutton .checkmarkrb:after {
+    top: 2px;
+	left: 2px;
+	width: 21px;
+	height: 21px;
+      border-radius: 50%;
+      background: var(--accent-color);
+  }
+
+  /* The container */
+.checkboxclass {
+    color: var(--type-color);
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+  }
+  
+  /* Hide the browser's default checkbox */
+  .checkboxclass input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+   
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 3.54px;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .checkboxclass:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .checkboxclass input:checked ~ .checkmark {
+    background-color: var(--accent-color);
+}
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .checkboxclass input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .checkboxclass .checkmark:after {
+    left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-radius: 15%;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+    
+  }
+  
+  #cerrar{
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: transparent;
+    background-position: center;
+    background-size: 35px;
+    background-repeat: no-repeat;
+    background-image: url('../img/cerrar.png');
+    
+  }
+
+  #aplicar{
+    height: 45px;
+    padding: 0 25px;
+    border: none;
+    color: var(--type-color);
+    font-family: var(--main-font);
+    font-size: medium;
+    background-color: var(--accent-color);
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 17px;
+  }
+
+  #aplicar:hover{
+    background-color: #c52828;
+  }
+
+  #back{
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: var(--accent-color);
+    background-image: url('../img/back.png');
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 31px;
+  }
+
+  #back:hover{
+    background-color: #c52828;
+  }
+    
+
+  #next{
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: var(--accent-color);
+    background-image: url('../img/next.png');
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 31px;
+  }
+
+  #next:hover{
+    background-color: #c52828;
+  }
+
+  .container-title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Alinea los elementos en los extremos */
+}
+
+h2{
+    color: var(--type-color);
+}
+
+.container-cards{
+    margin-top: 15px;
+    background-color: var(--main-bg-container);
+    width: calc(100% - 30px);
+    /*height: 1200px;*/
+    padding: 15px;
+    border-radius: 14px;
+}
+
+.card{
+margin: 10px 0;
+width: 100%;
+border-radius: 10.64px;
+background-color: #454545;
+}
+
+p{
+    
+    text-align: left;
+    font-family: var(--main-font);
+    color: var(--light-type-color);
+    line-height: 2;
+    margin-bottom: 0;
+}
+
+#important-info{
+    text-align: left;
+    font-family: var(--main-font);
+    font-weight: 700;
+    font-size: medium ;
+    color: var(--light-type-color);
+    line-height: 1.5;
+}
+
+h3{
+    text-align: left;
+    font-family: var(--main-font);
+    color: var(--type-color);
+    font-size: large;
+    margin: 0;
+}
+
+#pages-container{
+    float: right;
+    padding: 15px;
+}
+
+#pages{
+    width: 40px;
+}
+
+.prices{
+    position: relative;
+    float: right;
+    margin: 0px 50px 30px 0px;
+}
+
+#price-text{
+    
+    font-size: 16px;
+}
+
+
+#price-number{
+font-size: 30px;
+}
+
+#card-inactive{
+    border: none;
+    background-image: url(../img/unselected-card.png);
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-size: 44px;
+}
+
+#card-active{
+    background-image: url(../img/selected-card.png);
+    background-repeat: no-repeat;
+    border: 3px solid var(--accent-color);
+    background-position: right bottom -1%;
+    background-size: 44px;
+}
+
+#product-image{
+    display: block;
+    width: 200px;
+    float: left;
+    margin: 15px;
+    
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  /* Track */
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent-color); 
+    border-radius: 14px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c91818; 
+  }
+
+  .login{
+    margin-top: 15px;
+    background-color: var(--main-bg-container);
+    width: calc(100% - 30px);
+    padding: 15px;
+    border-radius: 14px;
+}
+
+#user {
+    font-family: var(--main-font);
+    width: 20%;
+    
+    background-image: url('../img/user.png');
+    background-position: left 10px center;
+    background-repeat: no-repeat;
+    background-color: var(--inputfield-bg-color);
+    background-size: 21px;
+    padding: 12px 20px 12px 40px;
+    margin: 8px 0;
+    border-radius: 12.76px;
+    border: 1px solid var(--inputfield-bg-color);
+    caret-color: var(--accent-color);
+    color: black;
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+ #user:focus {
+    border: 1px solid var(--accent-color);
+  }
+
+  #pwd {
+    font-family: var(--main-font);
+    width: 20%;
+    
+    background-image: url('../img/pwd.png');
+    background-position: left 10px center;
+    background-repeat: no-repeat;
+    background-color: var(--inputfield-bg-color);
+    background-size: 21px;
+    padding: 12px 20px 12px 40px;
+    margin: 8px 0;
+    border-radius: 12.76px;
+    border: 1px solid var(--inputfield-bg-color);
+    caret-color: var(--accent-color);
+    color: black;
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+ #pwd:focus {
+    border: 1px solid var(--accent-color);
+  }
+
+  #login-button{
+    width: 20%;
+    height: 45px;
+    padding: 0 25px;
+    border: none;
+    color: var(--type-color);
+    font-family: var(--main-font);
+    font-weight: 600;
+    font-size: small;
+    background-color: var(--accent-color);
+    background-position: center;
+    background-size: 25px;
+    background-repeat: no-repeat;
+    border-radius: 17px;
+}
+
+#login-button:hover{
+    background-color: #c52828;
+}

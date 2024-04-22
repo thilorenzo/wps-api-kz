@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Thi</title>
+  </head>
+  <body>
+    <section class="general-container">
+      <form action="">
+        <input
+          type="text"
+          id="search"
+          name="search"
+          placeholder="Buscar marca"
+        />
+
+        <button id="selected-brand">100-PERCENT</button>
+        <button id="unselected-brand">100-PERCENT</button>
+
+        <button id="filterbutton"></button>
+        <div class="filter">
+          <label class="radiobutton"
+            >Ganancia
+            <input type="radio" checked="checked" name="radio" />
+            <span class="checkmarkrb"></span>
+          </label>
+          <label class="radiobutton"
+            >Stock
+            <input type="radio" name="radio" />
+            <span class="checkmarkrb"></span>
+          </label>
+          <label class="checkboxclass"
+            >Amazon
+            <input type="checkbox" checked="checked" />
+            <span class="checkmark"></span>
+          </label>
+          <label class="checkboxclass"
+            >Ebay
+            <input type="checkbox" />
+            <span class="checkmark"></span>
+          </label>
+          <button id="cerrar"></button> <br /><br />
+          <button id="aplicar">Aplicar</button>
+        </div>
+      </form>
+    </section>
+    <section class="container-title">
+      <button id="back"></button>
+      <button id="next"></button>
+      <h2>100-PERCENT</h2>
+    </section>
+    <section class="container-cards">
+
+      <button class="card" id="card-inactive">
+        <img src="img/product-image.png" alt="" id="product-image" />
+        <div id="pages-container">
+          <img src="img/amazon.png" alt="" id="pages" />
+          <img src="img/ebay.png" alt="" id="pages" />
+        </div>
+        <p>SKU: 610-5017</p>
+        <h3>ARMEGA GOGGLE NUKETOWN CLEAR LENS</h3>
+        <p id="important-info">
+          Stock: 36 <br />
+          Profit in $us: $20.50 <br />
+          Profit %: 23%
+        </p>
+        <div class="prices">
+          <p id="price-text">Last Price</p>
+          <h3 id="price-number">$90.00</h3>
+        </div>
+        <div class="prices">
+          <p id="price-text">Standar Price</p>
+          <h3 id="price-number">$58.50</h3>
+        </div>
+      </button>
+
+      <button class="card" id="card-active">
+        <img src="img/product-image.png" alt="" id="product-image" />
+        <div id="pages-container">
+          <img src="img/amazon.png" alt="" id="pages" />
+          <img src="img/ebay.png" alt="" id="pages" />
+        </div>
+        <p>SKU: 610-5017</p>
+        <h3>ARMEGA GOGGLE NUKETOWN CLEAR LENS</h3>
+        <p id="important-info">
+          Stock: 36 <br />
+          Profit in $us: $20.50 <br />
+          Profit %: 23%
+        </p>
+        <div class="prices">
+          <p id="price-text">Last Price</p>
+          <h3 id="price-number">$90.00</h3>
+        </div>
+        <div class="prices">
+          <p id="price-text">Standar Price</p>
+          <h3 id="price-number">$58.50</h3>
+        </div>
+      </button>
+
+    </section>
+    <section class="login">
+      <form action="">
+        <input type="user" id="user" name="user" placeholder="Usuario" /> <br/>
+        <input type="password" id="pwd" name="pwd" placeholder="Contraseña" />
+        <br/>
+        <br/>
+        <button id="login-button">Log In</button>
+      </form>
+    </section>
+  </body>
+</html>

@@ -3,6 +3,7 @@ const apiKey = 'J9czsFE1crN4z3oRNJXqGxaa7nxWE9CuEsDNtCKJ'; // Reemplaza con tu c
 const logisticsCost = 11.0;
 const profitMargin = 10; // Margen de ganancia del 10%
 let cursor = 0;
+let isReady = 0;
 let itemsParcial = 0;
 let itemsTotal = 0;
 let listPrice = 0;
@@ -10,6 +11,7 @@ let standardDealerPrice = 0;
 let profit = 0;
 let profitPercentage = 0;
 let inventoryTotal = 0;
+let cursorNow = 0;
 
 
 
@@ -72,7 +74,7 @@ function buscarProductos() {
       .then(data => {
         const items = data.data;
         h = '<h2>'
-        let ol = '<ol>';
+        let ol = '';
 
         // Filtrar los productos que cumplen con todas las condiciones
         const filteredResults = items.filter(item => {
@@ -80,23 +82,17 @@ function buscarProductos() {
         if (item.inventory.data !== null) {
 
           if (item.inventory.data.total <= 25) {
-
-            console.log('< 25');
             
             return false; // No pasa el filtro si el inventario es menor o igual a 25
 
           } else {
 
-              profit = item.list_price  - item.standard_dealer_price - logisticsCost;
+              profit = (item.list_price - (item.list_price * 0.13))  - item.standard_dealer_price - logisticsCost;
               profitPercentage = (profit / item.list_price) * 100;
-
-              console.log(profit);
-              console.log(profitPercentage);
           }
           
         } else {
 
-          console.log('Inventory null');
           return false;
           
         }
@@ -113,19 +109,12 @@ function buscarProductos() {
         });
 
       console.log(filteredResults);
-      // Aquí podrías mostrar los resultados en tu aplicación de la forma que desees
-      cursor = data.meta.cursor.next;
-      if (cursor !== null) {
 
-        itemsParcial = filteredResults.length + itemsParcial
-        buscarProductos();
-        console.log('Parcial total de items: ', itemsParcial);
-        console.log('Esperando siguiente pagina');
-        
-      } else {
+      cursor = data.meta.cursor.next;
+      
+      if (cursor == null) {
 
         itemsTotal = filteredResults.length + itemsParcial
-        // Restablecer el valor de Cursor al valor original
 
         h += `Total de items: ${itemsTotal} </h2>`;
 
@@ -133,44 +122,111 @@ function buscarProductos() {
         itemsTotalHtml.innerHTML = h;
 
         filteredResults.forEach(item => {
-
-          
           ol += `
-          <li style="font-size: 22px;">
-            ${item.name}
-
-            <ul>
-              <li>SKU: ${item.sku}</li>
-
-              <li>Marca: ${item.brand.data.name}</li>
-
-              <li>Precio de lista: ${item.list_price}</li>
-
-              <li>Precio de Dealer: ${item.standard_dealer_price}</li>
-
-              <li>Profit $: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)}</li>
-
-              <li>Profit %: ${Math.round(((item.list_price - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}</li>
-
-              <li>Stock: ${item.inventory.data.total}</li>
-            </ul>
-          </li>
+          <button class="card" id="card-inactive">
+            <img src="img/product-image.png" alt="" id="product-image" />
+            <div id="pages-container">
+              <img src="img/amazon.png" alt="" id="pages" />
+              <img src="img/ebay.png" alt="" id="pages" />
+            </div>
+            <p>SKU: ${item.sku}</p>
+            <h3>${item.name}</h3>
+            <p id="important-info">
+              Brand: ${item.brand.data.name}
+              Stock: ${item.inventory.data.total} <br />
+              Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
+              Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
+            </p>
+            <div class="prices">
+              <p id="price-text">List Price</p>
+              <h3 id="price-number">$${item.list_price}</h3>
+            </div>
+            <div class="prices">
+              <p id="price-text">Standard Price</p>
+              <h3 id="price-number">$${item.standard_dealer_price}</h3>
+            </div>
+          </button>
           `;
         })
 
-        ol += '</ol>';
       
 
         const container = document.getElementById('container');
         container.innerHTML = ol;
 
-        cursor = 0;
         console.log('Listo!');
 
         // Reinicio contador
         itemsTotal = 0;
         itemsParcial = 0;
+        cursor = 0
+
+      } else {
+        itemsParcial = filteredResults.length + itemsParcial;
+        buscarProductos();
+        console.log('Parcial total de items: ', itemsParcial);
+        console.log('Esperando siguiente pagina');
+      
       }
+
+
+
+
+
+      // if (cursor !== null) {
+
+      //   itemsParcial = filteredResults.length + itemsParcial
+      //   buscarProductos();
+      //   console.log('Parcial total de items: ', itemsParcial);
+      //   console.log('Esperando siguiente pagina');
+        
+      // } else {
+        
+      //   itemsTotal = filteredResults.length + itemsParcial
+
+      //   h += `Total de items: ${itemsTotal} </h2>`;
+
+      //   const itemsTotalHtml = document.getElementById('itemsTotal');
+      //   itemsTotalHtml.innerHTML = h;
+
+      //   filteredResults.forEach(item => {
+      //     ol += `
+      //     <li style="font-size: 22px;">
+      //       ${item.name}
+
+      //       <ul>
+      //         <li>SKU: ${item.sku}</li>
+
+      //         <li>Marca: ${item.brand.data.name}</li>
+
+      //         <li>Precio de lista: ${item.list_price}</li>
+
+      //         <li>Precio de Dealer: ${item.standard_dealer_price}</li>
+
+      //         <li>Profit $: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)}</li>
+
+      //         <li>Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}</li>
+
+      //         <li>Stock: ${item.inventory.data.total}</li>
+      //       </ul>
+      //     </li>
+      //     `;
+      //   })
+
+      //   ol += '</ol>';
+      
+
+      //   const container = document.getElementById('container');
+      //   container.innerHTML = ol;
+
+      //   cursor = 1;
+      //   console.log('Listo!');
+
+      //   // Reinicio contador
+      //   itemsTotal = 0;
+      //   itemsParcial = 0;
+      // }
+
 
       })
       .catch(error => {
@@ -181,7 +237,7 @@ function buscarProductos() {
 
 
 // Asociar la función buscarProductos al botón
-document.getElementById('buscarProductosBtn').addEventListener('click', buscarProductos);
+document.getElementById('marcaSelect').addEventListener('change', buscarProductos);
 
 // Cargar las marcas al cargar la página
 cargarMarcas();
