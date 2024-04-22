@@ -20,6 +20,7 @@ let marcas = []; // Array para almacenar las marcas obtenidas del <select>
 let marcaActualIndex = -1; // Índice de la marca actual seleccionada (-1 indica ninguna seleccionada inicialmente)
 
 
+
 function cargarMarcas() {
     const apiUrl = 'https://api.wps-inc.com/brands?fields[brands]=name&sort=name&page[size]=1500';
     
@@ -279,6 +280,7 @@ function obtenerNombreMarcaPorId(id) {
   }
 }
 
+
 next.addEventListener('click', () => {
   if (marcaActualIndex < marcas.length - 1) {
       marcaActualIndex++;
@@ -294,6 +296,7 @@ back.addEventListener('click', () => {
       buscarProductos();
   }
 });
+
 
 
 // Cargar las marcas al cargar la página
