@@ -507,6 +507,7 @@ font-size: 30px;
     float: left;
     margin: 15px;
     min-height: 8em;
+    max-height: 15em;
 }
 
 /* width */
