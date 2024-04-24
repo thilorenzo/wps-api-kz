@@ -12,6 +12,8 @@ let profit = 0;
 let profitPercentage = 0;
 let inventoryTotal = 0;
 let cursorNow = 0;
+let filteredProducts = []
+let itemCount = 0
 
 const btnSiguienteMarca = document.getElementById('back');
 const btnAnteriorMarca = document.getElementById('next');
@@ -45,10 +47,12 @@ function cargarMarcas() {
   
         // Llenar el select con las opciones de marca
         marcas.forEach(marca => {
-          const option = document.createElement('option');
-          option.value = marca.id;
-          option.textContent = marca.name;
-          selectElement.appendChild(option);
+          if (marca.name !== "CARDO") {
+            const option = document.createElement('option');
+            option.value = marca.id;
+            option.textContent = marca.name;
+            selectElement.appendChild(option);
+          }
         });
 
         if (marcaActualIndex !== -1 && marcaActualIndex < marcas.length) {
@@ -69,11 +73,12 @@ function buscarProductos() {
   itemsTotalHtml.innerHTML = h;
   const selectedBrandId = document.getElementById('marcaSelect').value;
 
+
   let nombreMarca = obtenerNombreMarcaPorId(selectedBrandId)
   actualizarMarcaName(nombreMarca);
 
-  // obtenerNombreMarcaPorId(selectedBrandId);
-  // actualizarMarcaName(nombreMarca);
+  obtenerNombreMarcaPorId(selectedBrandId);
+  actualizarMarcaName(nombreMarca);
 
   let apiUrl = `https://api.wps-inc.com/items?include=inventory,brand,images&fields[items]=name,sku,list_price,standard_dealer_price&fields[inventory]=total&fields[brand]=name&fields[images]=domain,path,filename&filter[brand_id][eq]=${selectedBrandId}&page[size]=5000&page[cursor]=${cursor}`;
 
@@ -127,13 +132,14 @@ function buscarProductos() {
         }
         });
 
-      console.log(filteredResults);
 
+      filteredProducts.push(...filteredResults)
+      console.log(filteredProducts);
       cursor = data.meta.cursor.next;
       
       if (cursor == null) {
 
-        itemsTotal = filteredResults.length + itemsParcial
+        itemsTotal = filteredProducts.length
 
         h += `Total de items: ${itemsTotal} </h2>`;
 
@@ -141,11 +147,15 @@ function buscarProductos() {
         itemsTotalHtml.innerHTML = h;
 
 
-        filteredResults.forEach(item => {
+        filteredProducts.forEach(item => {
+          itemCount++
+          if (typeof item.images.data[0]!== "undefined") {
+            imageLink = item.images.data[0].filename
+          } else {
+            imageLink = 0
+          }
 
-          imageLink = item.images.data[0].filename
-
-          if (item.name.toLowerCase().includes('helmet')) {
+          if (item.name.toLowerCase().includes('helmet') && item.name.toLowerCase().includes('exhaust')) {
             ol += `
             <button class="card" id="card-inactive">
               <img src="https://cdn.wpsstatic.com/images/full/${imageLink}" alt="" id="product-image" />
@@ -204,15 +214,18 @@ function buscarProductos() {
 
         const container = document.getElementById('container');
         container.innerHTML = ol;
-
+        console.log(itemCount);
         console.log('Listo!');
 
         // Reinicio contador
         itemsTotal = 0;
         itemsParcial = 0;
         cursor = 0
+        itemCount = 0
+        filteredProducts = []
 
       } else {
+
         itemsParcial = filteredResults.length + itemsParcial;
         buscarProductos();
         console.log('Parcial total de items: ', itemsParcial);
