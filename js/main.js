@@ -3,7 +3,6 @@ const apiKey = 'J9czsFE1crN4z3oRNJXqGxaa7nxWE9CuEsDNtCKJ'; // Reemplaza con tu c
 const logisticsCost = 11.0;
 const profitMargin = 10; // Margen de ganancia del 10%
 let cursor = 0;
-let isReady = 0;
 let itemsParcial = 0;
 let itemsTotal = 0;
 let listPrice = 0;
@@ -14,13 +13,14 @@ let inventoryTotal = 0;
 let cursorNow = 0;
 let filteredProducts = []
 let itemCount = 0
+let h = ''
+let ol = ''
 
 const btnSiguienteMarca = document.getElementById('back');
 const btnAnteriorMarca = document.getElementById('next');
 
 let marcas = []; // Array para almacenar las marcas obtenidas del <select>
 let marcaActualIndex = -1; // Índice de la marca actual seleccionada (-1 indica ninguna seleccionada inicialmente)
-
 
 
 function cargarMarcas() {
@@ -64,10 +64,37 @@ function cargarMarcas() {
       });
   }
   
-// Función para buscar productos basados en la marca seleccionada
+// Función para buscar productos basados en la marca seleccionad
+
+
+
 function buscarProductos() {
+
+  // if (isFetching) {
+  //   controller.abort();
+  //   isFetching = false;
+  //   console.log("Aborto");
+  //   buscarProductos();
+  // }
+
+  // const abortController = React.useRef()
+
+  // React.useEffect(() => {
+  //  // If there is a pending fetch request with associated AbortController, abort
+  //  if (abortController.current) {
+  //    abortController.abort()
+  //  }
+  //  // Assign a new AbortController for the latest fetch to our useRef variable
+  //  abortController.current = new AbortController()
+  //  const { signal } = abortController.current });
+
   console.log('Esperando...');
-  let h = `<h2>Esperando... </h2>`;
+  ol = ''
+
+  const containerHtml = document.getElementById('container');
+  containerHtml.innerHTML = ol;
+
+  h = `<img src="img/loading.svg" alt="Loading..." width="50" height="50" id="loadingImage">`;
   
   const itemsTotalHtml = document.getElementById('itemsTotal');
   itemsTotalHtml.innerHTML = h;
@@ -76,11 +103,11 @@ function buscarProductos() {
 
   let nombreMarca = obtenerNombreMarcaPorId(selectedBrandId)
   actualizarMarcaName(nombreMarca);
-
   obtenerNombreMarcaPorId(selectedBrandId);
   actualizarMarcaName(nombreMarca);
 
-  let apiUrl = `https://api.wps-inc.com/items?include=inventory,brand,images&fields[items]=name,sku,list_price,standard_dealer_price&fields[inventory]=total&fields[brand]=name&fields[images]=domain,path,filename&filter[brand_id][eq]=${selectedBrandId}&page[size]=5000&page[cursor]=${cursor}`;
+  
+  let apiUrl = `https://api.wps-inc.com/items?include=inventory,brand,attributevalues,images&fields[items]=name,sku,list_price,standard_dealer_price&fields[inventory]=total&fields[brand]=name&fields[images]=domain,path,filename&fields[attributevalues]=name,attributekey_id&filter[brand_id][eq]=${selectedBrandId}&page[size]=15000&page[cursor]=${cursor}`;
 
   const requestOptions = {
       headers: {
@@ -94,12 +121,13 @@ function buscarProductos() {
       if (!response.ok) {
           throw new Error('La solicitud no fue exitosa');
       }
+      isFetching = true
       return response.json();
       })
       .then(data => {
         const items = data.data;
         h = '<h2>'
-        let ol = '';
+        ol = '';
 
         // Filtrar los productos que cumplen con todas las condiciones
         const filteredResults = items.filter(item => {
@@ -139,37 +167,90 @@ function buscarProductos() {
       
       if (cursor == null) {
 
-        itemsTotal = filteredProducts.length
+        removeOptions(document.getElementById('filterSelect'));
+
+        imprimirHtml(filteredProducts)
+        itemsTotal = 0;
+        itemsParcial = 0;
+        cursor = 0
+        itemCount = 0
+        filteredProducts = []
+        productType = []
+
+      } else {
+
+        itemsParcial = filteredResults.length + itemsParcial;
+        buscarProductos();
+        console.log('Parcial total de items: ', itemsParcial);
+        console.log('Esperando siguiente pagina');
+      
+      }
+      })
+      .catch(err => {
+        if (err.name == 'AbortError') { // se maneja el abort()
+          console.log("Aborted!");
+        } else {
+          throw err;
+        }
+      });
+}
+
+function imprimirHtml(filteredProducts) {
+  let itemProfitUs
+  let itemProfitPor
+  itemsTotal = filteredProducts.length
 
         h += `Total de items: ${itemsTotal} </h2>`;
 
         const itemsTotalHtml = document.getElementById('itemsTotal');
         itemsTotalHtml.innerHTML = h;
+        
+        let productType = []
+        
+        filteredProducts.forEach(item => {
+          item.itemProfitUs = (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)
+          item.itemProfitPor = Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)
+        })
 
+        filteredProducts.sort((itemA,itemB) => {
+          return itemB.itemProfitPor - itemA.itemProfitPor;
+        })
 
         filteredProducts.forEach(item => {
-          itemCount++
+          let categoryName = ''
+          for (let index = 0; index < item.attributevalues.data.length; index++) {
+            if (item.attributevalues.data[index].attributekey_id == 1 ) {
+              categoryName = item.attributevalues.data[index].name
+              console.log(categoryName);
+              categoryName = categoryName.replaceAll("/", '').replaceAll(/\s+/g, '').toLowerCase();
+              console.log(categoryName);
+              if (!productType.includes(item.attributevalues.data[index].name)) {
+                productType.push(item.attributevalues.data[index].name)
+              }
+            }
+          }
+
           if (typeof item.images.data[0]!== "undefined") {
             imageLink = item.images.data[0].filename
           } else {
             imageLink = 0
           }
 
-          if (item.name.toLowerCase().includes('helmet') && item.name.toLowerCase().includes('exhaust')) {
+          if (productType.includes("Exhaust") || productType.includes("Helmets")) {
             ol += `
-            <button class="card" id="card-inactive">
+            <button class="card ${categoryName}" id="card-inactive">
               <img src="https://cdn.wpsstatic.com/images/full/${imageLink}" alt="" id="product-image" />
               <div id="pages-container">
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
               <p>SKU: ${item.sku}</p>
               <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
-              <p id="important-info">
-                Brand: ${item.brand.data.name}
-                Stock: ${item.inventory.data.total} <br />
-                Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
-                Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
-              </p>
+
+              <p id="important-info">Brand: ${item.brand.data.name}</p>
+              <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
+              <p id="important-info">Profit in $us: ${"$" + itemProfitUs}</p>
+              <p id="important-info" class="profit"> Profit %: ${itemProfitPor+'%'}</p>
+
               <div class="prices">
                 <p id="price-text">List Price</p>
                 <h3 id="price-number">$${item.list_price}</h3>
@@ -182,7 +263,7 @@ function buscarProductos() {
           `;
           } else {
             ol += `
-            <button class="card" id="card-inactive">
+            <button class="card ${categoryName}" id="card-inactive">
               <img src="https://cdn.wpsstatic.com/images/full/${imageLink}" alt="" id="product-image" />
               <div id="pages-container">
                 <img src="img/amazon.png" alt="" id="pages" />
@@ -190,12 +271,12 @@ function buscarProductos() {
               </div>
               <p>SKU: ${item.sku}</p>
               <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
-              <p id="important-info">
-                Brand: ${item.brand.data.name}
-                Stock: ${item.inventory.data.total} <br />
-                Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)} <br />
-                Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}
-              </p>
+              
+              <p id="important-info">Brand: ${item.brand.data.name}</p>
+              <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
+              <p id="important-info">Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)}</p>
+              <p id="important-info" class="profit"> Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}</p>
+              
               <div class="prices">
                 <p id="price-text">List Price</p>
                 <h3 id="price-number">$${item.list_price}</h3>
@@ -210,34 +291,110 @@ function buscarProductos() {
           
         })
 
+        const selectElement = document.getElementById('filterSelect');
+
+        const option = document.createElement('option');
+        option.value = 'Categoria';
+        option.textContent = 'Categoria';
+        selectElement.appendChild(option);
+
+        productType.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          selectElement.appendChild(option);
+      });
+
       
 
         const container = document.getElementById('container');
         container.innerHTML = ol;
-        console.log(itemCount);
         console.log('Listo!');
+        console.log(productType);
 
         // Reinicio contador
-        itemsTotal = 0;
-        itemsParcial = 0;
-        cursor = 0
-        itemCount = 0
-        filteredProducts = []
 
-      } else {
-
-        itemsParcial = filteredResults.length + itemsParcial;
-        buscarProductos();
-        console.log('Parcial total de items: ', itemsParcial);
-        console.log('Esperando siguiente pagina');
-      
-      }
-      })
-      .catch(error => {
-      console.error('Ocurrió un error al buscar productos:', error);
-      });
+  
 }
 
+function removeOptions(selectElement) {
+  var i, L = selectElement.options.length - 1;
+  for(i = L; i >= 0; i--) {
+     selectElement.remove(i);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdownCategorias = document.getElementById('filterSelect');
+  const dropdownOrden = document.getElementById('ordenSelect');
+  const contenedorBotones = document.getElementById('container');
+
+  dropdownCategorias.addEventListener('change', () => {
+      let categoriaSeleccionada = dropdownCategorias.value;
+      categoriaSeleccionada = categoriaSeleccionada.replaceAll("/", '').replaceAll(/\s+/g, '').toLowerCase();
+
+      if (categoriaSeleccionada == "categoria") {
+        contenedorBotones.querySelectorAll('.card').forEach(boton => {
+          itemCount++
+          boton.style.display = 'inline-block';
+        });
+      } else {
+        const botones = contenedorBotones.querySelectorAll('.card');
+        botones.forEach(boton => {
+            boton.style.display = 'none';
+        });
+
+        // Mostrar los botones de la categoría seleccionada
+        const botonesCategoria = contenedorBotones.querySelectorAll(`.${categoriaSeleccionada}`);
+        botonesCategoria.forEach(boton => {
+            itemCount++
+            boton.style.display = 'inline-block';
+        });
+      }
+      h = `<h2>Total de items: ${itemCount}`
+      const itemsTotalHtml = document.getElementById('itemsTotal');
+      itemsTotalHtml.innerHTML = h;
+      itemCount = 0
+  });
+
+  dropdownOrden.addEventListener('change', () => {
+    let ordenSeleccionado = dropdownOrden.value;
+    console.log(ordenSeleccionado);
+    botones = contenedorBotones.querySelectorAll('.card');
+    botonesArray = Array.from(botones);
+
+    botonesArray.sort((botonA, botonB) => {
+      // Obtener el valor del stock y la ganancia de cada botón
+      const stockA = parseInt(botonA.querySelector('.stock').textContent.replace('Stock: ', ''));
+      const stockB = parseInt(botonB.querySelector('.stock').textContent.replace('Stock: ', ''));
+
+      console.log(stockA,stockB);
+
+      const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
+      const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
+
+      console.log(gananciaA,gananciaB);
+
+      // Comparar stock o ganancia según la opción seleccionada en el dropdown
+      if (ordenSeleccionado == 'stock') {
+          return stockB - stockA; // Ordenar de mayor a menor stock
+      } else if (ordenSeleccionado == 'profit') {
+          return gananciaB - gananciaA; // Ordenar de mayor a menor ganancia
+      } else {
+          return 0; // No hay ordenamiento
+      }
+  });
+
+  // Eliminar los botones del contenedor
+  contenedorBotones.innerHTML = '';
+
+  // Agregar los botones ordenados al contenedor
+  botonesArray.forEach(boton => {
+      contenedorBotones.appendChild(boton);
+  });
+
+});
+});
 function filterFunction() {
   var input, filter, ul, li, a, i;
   input = document.getElementById("search");
@@ -254,6 +411,8 @@ function filterFunction() {
   }
 }
 
+
+
 // Asociar la función buscarProductos al botón
 document.getElementById('marcaSelect').addEventListener('change', () => {
 
@@ -268,7 +427,6 @@ document.getElementById('marcaSelect').addEventListener('change', () => {
   if (selectedMarcaIndex !== -1) {
       marcaActualIndex = selectedMarcaIndex;
   }
-
 
 });
 
@@ -310,7 +468,10 @@ back.addEventListener('click', () => {
   }
 });
 
-
+function filterPopup() {
+  var popup = document.getElementById("popup");
+  popup.classList.toggle("show");
+}
 
 // Cargar las marcas al cargar la página
 cargarMarcas();

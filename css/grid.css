@@ -47,3 +47,31 @@
 .tab {
   margin-right: 10px; /* Espacio entre las pestañas */
 }
+
+.derecha {
+  float: right;
+  margin-right: 40px;
+  margin-top: 8px;
+}
+
+label{
+  font-family: var(--main-font);
+  font-size: small;
+  color: var(--type-color);
+  background: none;
+  border: none;
+}
+
+#filterSelect {
+  color: var(--type-color);
+  background-color: var(--section-container-card);
+  border: none;
+  border-radius: 10px;
+}
+
+#ordenSelect {
+  color: var(--type-color);
+  background-color: var(--section-container-card);
+  border: none;
+  border-radius: 10px;
+}
