@@ -449,7 +449,7 @@ p{
     font-weight: 700;
     font-size: medium ;
     color: var(--light-type-color);
-    line-height: 1.5;
+    line-height: 0.5;
 }
 
 h3{
@@ -506,7 +506,7 @@ font-size: 30px;
     width: 200px;
     float: left;
     margin: 15px;
-    min-height: 8em;
+    min-height: 10em;
     max-height: 15em;
 }
 
@@ -600,4 +600,10 @@ font-size: 30px;
 
 #login-button:hover{
     background-color: #c52828;
+}
+
+#loadingImage {
+  position: relative;
+  margin-top: 25%;
+  margin-left: 50%;
 }
