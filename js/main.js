@@ -70,24 +70,6 @@ function cargarMarcas() {
 
 function buscarProductos() {
 
-  // if (isFetching) {
-  //   controller.abort();
-  //   isFetching = false;
-  //   console.log("Aborto");
-  //   buscarProductos();
-  // }
-
-  // const abortController = React.useRef()
-
-  // React.useEffect(() => {
-  //  // If there is a pending fetch request with associated AbortController, abort
-  //  if (abortController.current) {
-  //    abortController.abort()
-  //  }
-  //  // Assign a new AbortController for the latest fetch to our useRef variable
-  //  abortController.current = new AbortController()
-  //  const { signal } = abortController.current });
-
   console.log('Esperando...');
   ol = ''
 
@@ -210,6 +192,8 @@ function imprimirHtml(filteredProducts) {
         filteredProducts.forEach(item => {
           item.itemProfitUs = (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)
           item.itemProfitPor = Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)
+          itemProfitUs = item.itemProfitUs
+          itemProfitPor = item.itemProfitPor
         })
 
         filteredProducts.sort((itemA,itemB) => {
@@ -221,9 +205,7 @@ function imprimirHtml(filteredProducts) {
           for (let index = 0; index < item.attributevalues.data.length; index++) {
             if (item.attributevalues.data[index].attributekey_id == 1 ) {
               categoryName = item.attributevalues.data[index].name
-              console.log(categoryName);
               categoryName = categoryName.replaceAll("/", '').replaceAll(/\s+/g, '').toLowerCase();
-              console.log(categoryName);
               if (!productType.includes(item.attributevalues.data[index].name)) {
                 productType.push(item.attributevalues.data[index].name)
               }
@@ -274,8 +256,8 @@ function imprimirHtml(filteredProducts) {
               
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
-              <p id="important-info">Profit in $us: ${"$" + (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)}</p>
-              <p id="important-info" class="profit"> Profit %: ${Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)+'%'}</p>
+              <p id="important-info">Profit in $us: ${"$" + itemProfitUs}</p>
+              <p id="important-info" class="profit"> Profit %: ${itemProfitPor+'%'}</p>
               
               <div class="prices">
                 <p id="price-text">List Price</p>
@@ -310,7 +292,6 @@ function imprimirHtml(filteredProducts) {
         const container = document.getElementById('container');
         container.innerHTML = ol;
         console.log('Listo!');
-        console.log(productType);
 
         // Reinicio contador
 
@@ -359,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   dropdownOrden.addEventListener('change', () => {
     let ordenSeleccionado = dropdownOrden.value;
-    console.log(ordenSeleccionado);
     botones = contenedorBotones.querySelectorAll('.card');
     botonesArray = Array.from(botones);
 
@@ -368,12 +348,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const stockA = parseInt(botonA.querySelector('.stock').textContent.replace('Stock: ', ''));
       const stockB = parseInt(botonB.querySelector('.stock').textContent.replace('Stock: ', ''));
 
-      console.log(stockA,stockB);
 
       const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
       const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
 
-      console.log(gananciaA,gananciaB);
 
       // Comparar stock o ganancia según la opción seleccionada en el dropdown
       if (ordenSeleccionado == 'stock') {
