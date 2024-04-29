@@ -192,8 +192,7 @@ function imprimirHtml(filteredProducts) {
         filteredProducts.forEach(item => {
           item.itemProfitUs = (item.list_price - logisticsCost - item.standard_dealer_price).toFixed(2)
           item.itemProfitPor = Math.round((((item.list_price - (item.list_price * 0.13)) - logisticsCost - item.standard_dealer_price)/item.list_price)*100)
-          itemProfitUs = item.itemProfitUs
-          itemProfitPor = item.itemProfitPor
+
         })
 
         filteredProducts.sort((itemA,itemB) => {
@@ -201,6 +200,8 @@ function imprimirHtml(filteredProducts) {
         })
 
         filteredProducts.forEach(item => {
+          itemProfitUs = item.itemProfitUs
+          itemProfitPor = item.itemProfitPor
           let categoryName = ''
           for (let index = 0; index < item.attributevalues.data.length; index++) {
             if (item.attributevalues.data[index].attributekey_id == 1 ) {
@@ -351,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
       const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
+      console.log(gananciaA, gananciaB);
 
 
       // Comparar stock o ganancia según la opción seleccionada en el dropdown
