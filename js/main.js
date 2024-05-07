@@ -78,7 +78,7 @@ function buscarProductos() {
 
   h = `<img src="img/loading.svg" alt="Loading..." width="50" height="50" id="loadingImage">`;
   
-  const itemsTotalHtml = document.getElementById('itemsTotal');
+  const itemsTotalHtml = document.getElementById('container');
   itemsTotalHtml.innerHTML = h;
   const selectedBrandId = document.getElementById('marcaSelect').value;
 
@@ -108,7 +108,7 @@ function buscarProductos() {
       })
       .then(data => {
         const items = data.data;
-        h = '<h2>'
+        h = ''
         ol = '';
 
         // Filtrar los productos que cumplen con todas las condiciones
@@ -182,11 +182,15 @@ function imprimirHtml(filteredProducts) {
   let itemProfitPor
   itemsTotal = filteredProducts.length
 
-        h += `Total de items: ${itemsTotal} </h2>`;
+        h += `Total de items: ${itemsTotal}`;
 
         const itemsTotalHtml = document.getElementById('itemsTotal');
         itemsTotalHtml.innerHTML = h;
-        
+
+        if (itemsTotal == 0) {
+          ol = `<h2 id="loadingImage" style="margin-left: 43%">Nada por aqui...</h2>`;
+        }
+
         let productType = []
         
         filteredProducts.forEach(item => {
@@ -227,7 +231,7 @@ function imprimirHtml(filteredProducts) {
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
               <p>SKU: ${item.sku}</p>
-              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
+              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" class="productName"><h3>${item.name}</h3></a>
 
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
@@ -253,7 +257,7 @@ function imprimirHtml(filteredProducts) {
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
               <p>SKU: ${item.sku}</p>
-              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank"><h3>${item.name}</h3></a>
+              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" class="productName"><h3>${item.name}</h3></a>
               
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
@@ -375,6 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 });
+
+
 function filterFunction() {
   var input, filter, ul, li, a, i;
   input = document.getElementById("search");
@@ -392,10 +398,39 @@ function filterFunction() {
 }
 
 
+function filterBotones() {
+  contItems = 0
+  var input, filter, div, a, i;
+  input = document.getElementById("search2");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("container");
+  button = div.getElementsByTagName("button");
+  a = div.getElementsByClassName("productName"); 
+
+  for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        button[i].style.display = ""; 
+        contItems++
+      } else {
+        button[i].style.display = "none"; 
+      }
+  }
+
+  h = `Total de items: ${contItems}`;
+
+  const itemsTotalHtml = document.getElementById('itemsTotal');
+  itemsTotalHtml.innerHTML = h;
+}
+
+
 
 // Asociar la función buscarProductos al botón
 document.getElementById('marcaSelect').addEventListener('change', () => {
 
+  h = ''
+  const itemsTotalHtml = document.getElementById('itemsTotal');
+  itemsTotalHtml.innerHTML = h;
   buscarProductos()
 
   const selectedId = marcaSelect.value; // Obtener el id seleccionado como número entero

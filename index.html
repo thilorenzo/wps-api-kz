@@ -40,7 +40,8 @@
       <div class="box general-container" id="productBox">
         <div class="productTab">
           <button class="tab active">Todos</button>
-          <button class="tab"></button>
+          <!-- <div id = "itemsTotal"></div> -->
+          <button class="tab" id = "itemsTotal"></button>
           <button class="tab"></button>
           <div class="derecha">
             <label for="filterSelect">Filtrar por:</label>
@@ -56,13 +57,25 @@
             </select>
           </div>
         </div>
+        <section style="padding: 0 15px 0 15px;">
+          <form action="" id="searchMarca" style="margin-bottom: 10px;" >
+            <input
+            type="text"
+            id="search2"
+            name="searchMarca"
+            placeholder="Buscar marca"
+            onkeyup="filterBotones()"
+            />
+          </form>
+        </section>
         <div class="content" style="
         padding-left: 15px;
         padding-right: 15px;
-        max-height: 40em;
-        overflow-y: auto;">
+        max-height: 36.5em;
+        overflow-y: auto;
+        border-radius: 15px;">
           <!-- Contenido de la pestaña activa -->
-          <div id = "itemsTotal"></div>
+
           <div id= "container"></div>
         </div>
       </div>
