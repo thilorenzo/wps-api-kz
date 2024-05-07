@@ -99,7 +99,7 @@ header {
   margin-bottom: 0.5%;
 }
 
-#search {
+#search, #search2 {
     font-family: var(--main-font);
     width: calc(100%);
     
@@ -118,9 +118,11 @@ header {
     outline: none;
   }
   
- #search:focus {
+ #search:focus, #search2:focus {
     border: 1px solid var(--accent-color);
   }
+
+  
 
   ::placeholder {
     color: #8C8C8C;
@@ -504,10 +506,11 @@ font-size: 30px;
 #product-image{
     display: block;
     width: 200px;
+    height: 200px;
     float: left;
     margin: 15px;
-    min-height: 10em;
-    max-height: 15em;
+    /* padding-bottom: 12em;
+    max-height: 15em; */
 }
 
 /* width */
