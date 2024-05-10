@@ -231,7 +231,7 @@ function imprimirHtml(filteredProducts) {
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
               <p>SKU: ${item.sku}</p>
-              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" class="productName"><h3>${item.name}</h3></a>
+              <h3>${item.name}</h3><a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" draggable="false" class="productName"><img src="img/link.png" alt="" id="link"/></a>
 
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
@@ -257,8 +257,7 @@ function imprimirHtml(filteredProducts) {
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
               <p>SKU: ${item.sku}</p>
-              <a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" class="productName"><h3>${item.name}</h3></a>
-              
+              <h3>${item.name}<a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" draggable="false" class="productName"><img src="img/link.png" alt="link" id="link"/></a></h3>
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
               <p id="important-info">Profit in $us: ${"$" + itemProfitUs}</p>
