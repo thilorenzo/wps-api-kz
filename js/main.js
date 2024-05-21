@@ -348,26 +348,22 @@ document.addEventListener('DOMContentLoaded', () => {
     botonesArray = Array.from(botones);
 
     botonesArray.sort((botonA, botonB) => {
-      // Obtener el valor del stock y la ganancia de cada botón
-      const stockA = parseInt(botonA.querySelector('.stock').textContent.replace('Stock: ', ''));
-      const stockB = parseInt(botonB.querySelector('.stock').textContent.replace('Stock: ', ''));
-
-
-      const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
-      const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
-      
-      const skuA = botonA.querySelector('.sku').textContent;
-      const skuB = botonB.querySelector('.sku').textContent;
-
-
-
       // Comparar stock o ganancia según la opción seleccionada en el dropdown
       if (ordenSeleccionado == 'stock') {
+          const stockA = parseInt(botonA.querySelector('.stock').textContent.replace('Stock: ', ''));
+          const stockB = parseInt(botonB.querySelector('.stock').textContent.replace('Stock: ', ''));
+
           return stockB - stockA; // Ordenar de mayor a menor stock
       } else if (ordenSeleccionado == 'profit') {
+          const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
+          const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
+
           return gananciaB - gananciaA; // Ordenar de mayor a menor ganancia
-      } else if (ordenSeleccionado == 'sku') {
-          return skuA.localeCompare(skuB); // Ordenar alfanuméricamente por SKU
+      } else if (ordenSeleccionado == 'SKU') {
+          const skuA = botonA.querySelector('.sku').textContent.replaceAll('SKU: ','').replaceAll('-','');
+          const skuB = botonB.querySelector('.sku').textContent.replaceAll('SKU: ','').replaceAll('-','');
+          console.log(skuB - skuA);
+          return skuB - skuA; // Ordenar alfanuméricamente por SKU
       } else {
           return 0; // No hay ordenamiento
       }
