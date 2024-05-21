@@ -475,7 +475,8 @@ h3{
     font-size: large;
     margin: 0;
     user-select: text;
-    cursor: text;
+    cursor: text0.3
+    ;
 }
 
 #pages-container{

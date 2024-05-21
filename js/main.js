@@ -230,7 +230,7 @@ function imprimirHtml(filteredProducts) {
               <div id="pages-container">
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
-              <p>SKU: ${item.sku}</p>
+              <p class="sku">SKU: ${item.sku}</p>
               <h3>${item.name}</h3><a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" draggable="false" class="productName"><img src="img/link.png" alt="" id="link"/></a>
 
               <p id="important-info">Brand: ${item.brand.data.name}</p>
@@ -256,7 +256,7 @@ function imprimirHtml(filteredProducts) {
                 <img src="img/amazon.png" alt="" id="pages" />
                 <img src="img/ebay.png" alt="" id="pages" />
               </div>
-              <p>SKU: ${item.sku}</p>
+              <p class="sku">SKU: ${item.sku}</p>
               <h3>${item.name}<a href="https://www.wpsorders.com/wpsonline/o2POPOUT.pgm?ITEM=${item.sku}" target="_blank" draggable="false" class="productName"><img src="img/link.png" alt="link" id="link"/></a></h3>
               <p id="important-info">Brand: ${item.brand.data.name}</p>
               <p id="important-info" class="stock">Stock: ${item.inventory.data.total}</p>
@@ -355,7 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const gananciaA = parseInt(botonA.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
       const gananciaB = parseInt(botonB.querySelector('.profit').textContent.replace('Profit %: ', '').replaceAll('%',''));
-      console.log(gananciaA, gananciaB);
+      
+      const skuA = botonA.querySelector('.sku').textContent;
+      const skuB = botonB.querySelector('.sku').textContent;
+
 
 
       // Comparar stock o ganancia según la opción seleccionada en el dropdown
@@ -363,6 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
           return stockB - stockA; // Ordenar de mayor a menor stock
       } else if (ordenSeleccionado == 'profit') {
           return gananciaB - gananciaA; // Ordenar de mayor a menor ganancia
+      } else if (ordenSeleccionado == 'sku') {
+          return skuA.localeCompare(skuB); // Ordenar alfanuméricamente por SKU
       } else {
           return 0; // No hay ordenamiento
       }
