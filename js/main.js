@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const skuA = botonA.querySelector('.sku').textContent.replaceAll('SKU: ','').replaceAll('-','');
           const skuB = botonB.querySelector('.sku').textContent.replaceAll('SKU: ','').replaceAll('-','');
 
-          return skuB - skuA; // Ordenar alfanuméricamente por SKU
+          return skuA - skuB; // Ordenar alfanuméricamente por SKU
       } else {
           return 0; // No hay ordenamiento
       }
